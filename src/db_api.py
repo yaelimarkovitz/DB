@@ -47,10 +47,11 @@ class DBTable:
     def update_record(self, key: Any, values: Dict[str, Any]) -> None:
         raise NotImplementedError
 
-    # def query_table(self, criteria: List[SelectionCriteria]) \
-    #         -> List[Dict[str, Any]]:
-    #     raise NotImplementedError
-    #
+    def query_table(self, criteria: List[SelectionCriteria]) \
+            -> List[Dict[str, Any]]:
+        raise NotImplementedError
+
+
     # def create_index(self, field_to_index: str) -> None:
     #     raise NotImplementedError
 

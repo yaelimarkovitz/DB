@@ -16,35 +16,35 @@ class DBTable(DBTable):
                 dic_[field.name] = str(field.type).split(" ")[1][:-2][1:]
             meta_data = {"meta_data": {"name": name, "fields": dic_, "key": key_field_name}}
             with open(self.data_path, "w") as table_file:
-                json.dump(meta_data, table_file,default=str)
+                json.dump(meta_data, table_file, default=str)
 
     def count(self) -> int:
         table_file = open(self.data_path)
         data_table = json.load(table_file)
-        return len(data_table.keys())-1
+        return len(data_table.keys()) - 1
 
     def insert_record(self, values: Dict[str, Any]) -> None:
         if self.key_field_name not in values.keys():
             raise ValueError
-        else:
-            table_file = open(self.data_path)
-            data_table = json.load(table_file)
-            if str(values[self.key_field_name]) in data_table.keys():
-                raise ValueError
-            with open(self.data_path, "w") as table_file:
-                key = values[self.key_field_name]
-                values.pop(self.key_field_name)
-                data_table[key] = values
-                json.dump(data_table, table_file, default=str)
+
+        table_file = open(self.data_path)
+        data_table = json.load(table_file)
+        if str(values[self.key_field_name]) in data_table.keys():
+            raise ValueError
+        with open(self.data_path, "w") as table_file:
+            key = values[self.key_field_name]
+            values.pop(self.key_field_name)
+            data_table[key] = values
+            json.dump(data_table, table_file, default=str)
 
     def delete_record(self, key: Any) -> None:
         print(key)
         table_file = open(self.data_path)
         data_table = json.load(table_file)
-        # if key in data_table.keys():
-        del data_table[str(key)]
-        with open(self.data_path, "w") as table_file:
-            json.dump(data_table, table_file,default=str)
+        if str(key) in data_table.keys():
+            del data_table[str(key)]
+            with open(self.data_path, "w") as table_file:
+                json.dump(data_table, table_file, default=str)
 
     def get_record(self, key: Any) -> Dict[str, Any]:
         table_file = open(self.data_path)
@@ -61,11 +61,27 @@ class DBTable(DBTable):
             raise IndexError
         else:
             with open(self.data_path, "w") as table_file:
-                data_table[str(key)] =values
-                json.dump(data_table, table_file,default=str)
+                data_table[str(key)] = values
+                json.dump(data_table, table_file, default=str)
+
+    def is_meets_the_criterion(self, record: Dict, criteria: List[SelectionCriteria]) -> bool:
+        for command in criteria:
+            if not eval(record[command.field_name] + (command.operator) + command.value):
+                return False
+        return True
+
+    def query_table(self, criteria: List[SelectionCriteria]) -> List[Dict[str, Any]]:
+        table_file = open(self.data_path)
+        data_table = json.load(table_file)
+        list_of_values = []
+        for record in data_table:
+            if self.is_meets_the_criterion(record, criteria):
+                list_of_values.append(record)
+        return list_of_values
 
 
 class DataBase(DataBase):
+
     def __init__(self):
         self.database_path = f"./{DB_ROOT}/my_database.json"
 
@@ -77,13 +93,13 @@ class DataBase(DataBase):
         check_file = Path(self.database_path)
         if not check_file.is_file():
             with open(self.database_path, "w") as database_file:
-                json.dump({new_table.name: new_table.data_path}, database_file,default=str)
+                json.dump({new_table.name: new_table.data_path}, database_file, default=str)
         else:
             database_file = open(self.database_path)
             database_data = json.load(database_file)
             database_data[new_table.name] = new_table.data_path
             with open(self.database_path, "w") as database_file:
-                json.dump(database_data, database_file,default=str)
+                json.dump(database_data, database_file, default=str)
         return new_table
 
     def num_tables(self) -> int:
@@ -115,7 +131,7 @@ class DataBase(DataBase):
         database_data = json.load(table_file)
         database_data.pop(table_name)
         with open(self.database_path, "w") as database_file:
-            json.dump(database_data, database_file,default=str)
+            json.dump(database_data, database_file, default=str)
 
     def get_tables_names(self) -> List[Any]:
         table_file = open(self.database_path)
