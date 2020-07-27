@@ -47,12 +47,12 @@ class DBTable:
     def update_record(self, key: Any, values: Dict[str, Any]) -> None:
         raise NotImplementedError
 
-    def query_table(self, criteria: List[SelectionCriteria]) \
-            -> List[Dict[str, Any]]:
-        raise NotImplementedError
-
-    def create_index(self, field_to_index: str) -> None:
-        raise NotImplementedError
+    # def query_table(self, criteria: List[SelectionCriteria]) \
+    #         -> List[Dict[str, Any]]:
+    #     raise NotImplementedError
+    #
+    # def create_index(self, field_to_index: str) -> None:
+    #     raise NotImplementedError
 
 
 @dataclass_json
@@ -77,10 +77,10 @@ class DataBase:
     def get_tables_names(self) -> List[Any]:
         raise NotImplementedError
 
-    def query_multiple_tables(
-            self,
-            tables: List[str],
-            fields_and_values_list: List[List[SelectionCriteria]],
-            fields_to_join_by: List[str]
-    ) -> List[Dict[str, Any]]:
-        raise NotImplementedError
+    # def query_multiple_tables(
+    #         self,
+    #         tables: List[str],
+    #         fields_and_values_list: List[List[SelectionCriteria]],
+    #         fields_to_join_by: List[str]
+    # ) -> List[Dict[str, Any]]:
+    #     raise NotImplementedError
