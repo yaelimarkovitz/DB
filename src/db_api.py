@@ -51,9 +51,8 @@ class DBTable:
             -> List[Dict[str, Any]]:
         raise NotImplementedError
 
-
-    # def create_index(self, field_to_index: str) -> None:
-    #     raise NotImplementedError
+    def create_index(self, field_to_index: str) -> None:
+        raise NotImplementedError
 
 
 @dataclass_json
